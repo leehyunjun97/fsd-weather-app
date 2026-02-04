@@ -3,6 +3,8 @@ import axios from 'axios';
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 const BASE_URL = import.meta.env.VITE_WEATHER_API_URL;
 const GEO_URL = import.meta.env.VITE_GEO_API_URL;
+const KAKAO_KEY = import.meta.env.VITE_KAKAO_API_KEY;
+const KAKAO_SEARCH_URL = import.meta.env.VITE_KAKAO_SEARCH_API_URL;
 
 export const fetchWeather = async ({
   lat,
@@ -43,5 +45,35 @@ export const fetchLocationName = async ({
   } catch (error) {
     console.error('주소 변환 실패:', error);
     return '나의 위치';
+  }
+};
+
+export const fetchCoordinates = async (
+  query: string
+): Promise<GeoLocation | null> => {
+  try {
+    const response = await axios.get(KAKAO_SEARCH_URL, {
+      headers: {
+        Authorization: `KakaoAK ${KAKAO_KEY}`,
+      },
+      params: {
+        query,
+        size: 1,
+      },
+    });
+
+    if (response.data.documents && response.data.documents.length > 0) {
+      const { x, y } = response.data.documents[0];
+
+      return {
+        lat: parseFloat(y),
+        lon: parseFloat(x),
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.error('좌표 변환 실패 (카카오):', error);
+    return null;
   }
 };

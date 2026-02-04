@@ -1,28 +1,19 @@
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import QueryProvider from './providers/QueryProvider';
-import Header from '../widgets/Header';
 import Main from '../pages/Main';
-
-const Layout = () => {
-  return (
-    <div className='min-h-screen bg-gray-50 flex flex-col items-center'>
-      <Header />
-      <main className='layout-width flex-1 p-4 pb-20'>
-        <Outlet />
-      </main>
-    </div>
-  );
-};
+import RootLayout from './ui/RootLayout';
+import DetailPage from '../pages/Detail';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <RootLayout />,
     children: [
       {
         index: true,
         element: <Main />,
       },
+      { path: 'detail/:locationName', element: <DetailPage /> },
     ],
   },
 ]);

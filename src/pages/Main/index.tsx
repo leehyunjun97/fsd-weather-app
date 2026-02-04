@@ -1,10 +1,10 @@
 import { CurrentWeatherCard } from '../../entities/weather/ui/CurrentWeatherCard';
 import { HourlyWeatherRow } from '../../entities/weather/ui/HourlyWeatherRow';
+import WeatherSkeleton from '../../entities/weather/ui/WeatherSkeleton';
 import { useAddress } from '../../shared/hooks/useAddress';
 import { useCurrentLocation } from '../../shared/hooks/useCurrentLocation';
 import { useWeather } from '../../shared/hooks/useWeather';
 import { ErrorState } from './ui/ErrorState';
-import { MainSkeleton } from './ui/MainSkeleton';
 
 export default function MainPage() {
   const {
@@ -23,14 +23,14 @@ export default function MainPage() {
   const { data: address } = useAddress(location);
 
   if (locLoading || weatherLoading) {
-    return <MainSkeleton />;
+    return <WeatherSkeleton />;
   }
 
   const errorMessage = locError || (weatherError as Error)?.message;
   if (errorMessage || !weatherData) {
     return (
       <ErrorState
-        message={errorMessage || '데이터가 없습니다.'}
+        message={errorMessage || '해당 장소의 정보가 제공되지 않습니다.'}
         onRetry={() => {
           if (locError) window.location.reload();
           else refetch();

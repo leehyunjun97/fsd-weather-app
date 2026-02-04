@@ -49,3 +49,31 @@
     @apply p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-900 active:scale-95 transition-colors cursor-pointer;
   }
 }
+
+@layer utilities {
+  .scrollbar-hover {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .scrollbar-hover:hover {
+    scrollbar-color: #cbd5e1 transparent;
+  }
+
+  .scrollbar-hover::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .scrollbar-hover::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-hover::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 10px;
+  }
+
+  .scrollbar-hover:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+  }
+}

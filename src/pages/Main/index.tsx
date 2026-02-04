@@ -1,37 +1,57 @@
-import { useEffect } from 'react';
+import { CurrentWeatherCard } from '../../entities/weather/ui/CurrentWeatherCard';
+import { HourlyWeatherRow } from '../../entities/weather/ui/HourlyWeatherRow';
+import { useAddress } from '../../shared/hooks/useAddress';
 import { useCurrentLocation } from '../../shared/hooks/useCurrentLocation';
 import { useWeather } from '../../shared/hooks/useWeather';
+import { ErrorState } from './ui/ErrorState';
+import { MainSkeleton } from './ui/MainSkeleton';
 
 export default function MainPage() {
   const {
     location,
-    error: locationError,
-    isLoading: locationLoading,
+    error: locError,
+    isLoading: locLoading,
   } = useCurrentLocation();
+
   const {
     data: weatherData,
     error: weatherError,
     isLoading: weatherLoading,
+    refetch,
   } = useWeather(location);
 
-  useEffect(() => {
-    if (location) {
-      console.log('현재 위치 좌표:', location);
-    }
-    if (weatherData) {
-      console.log('날씨 데이터:', weatherData);
-    }
-    if (locationError) {
-      console.error('위치 에러:', locationError);
-    }
-    if (weatherError) {
-      console.error('날씨 API 에러:', weatherError);
-    }
-  }, [location, weatherData, locationError, weatherError]);
+  const { data: address } = useAddress(location);
+
+  if (locLoading || weatherLoading) {
+    return <MainSkeleton />;
+  }
+
+  const errorMessage = locError || (weatherError as Error)?.message;
+  if (errorMessage || !weatherData) {
+    return (
+      <ErrorState
+        message={errorMessage || '데이터가 없습니다.'}
+        onRetry={() => {
+          if (locError) window.location.reload();
+          else refetch();
+        }}
+      />
+    );
+  }
 
   return (
-    <>
-      <h1>MainPage Component</h1>
-    </>
+    <div className='flex flex-col gap-6 pb-10 animate-in fade-in duration-700'>
+      <section>
+        <CurrentWeatherCard
+          current={weatherData.current}
+          today={weatherData.daily[0]}
+          locationName={address || '위치 확인 중...'}
+        />
+      </section>
+
+      <section>
+        <HourlyWeatherRow data={weatherData.hourly} />
+      </section>
+    </div>
   );
 }

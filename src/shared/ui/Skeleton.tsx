@@ -1,9 +1,13 @@
+import { twMerge } from 'tailwind-merge';
+
 interface SkeletonProps {
   className?: string;
 }
 
 export const Skeleton = ({ className }: SkeletonProps) => {
   return (
-    <div className={`animate-pulse bg-gray-200 rounded-md ${className}`} />
+    <div
+      className={twMerge('animate-pulse bg-gray-200 rounded-md', className)}
+    />
   );
 };

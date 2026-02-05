@@ -47,44 +47,34 @@ export const fetchLocationName = async ({
   }
 };
 
-const searchOSM = async (query: string) => {
+export const fetchCoordinates = async (
+  query: string
+): Promise<GeoLocation | null> => {
   try {
+    console.log(query);
+
     const response = await axios.get(COORDS_URL, {
       params: {
         q: query,
         format: 'json',
         addressdetails: 1,
         limit: 1,
-        countrycodes: 'kr',
         email: 'dlguswns41@naver.com',
       },
     });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
 
-export const fetchCoordinates = async (
-  query: string
-): Promise<GeoLocation | null> => {
-  const parts = query.trim().split(/\s+/);
-  for (let i = parts.length; i > 0; i--) {
-    const currentQuery = parts.slice(0, i).join(' ');
+    if (response.data && response.data.length > 0) {
+      const data = response.data[0];
 
-    if (currentQuery.length < 2) break;
-
-    const data = await searchOSM(currentQuery);
-
-    if (data && data.length > 0) {
-      const result = data[0];
       return {
-        lat: parseFloat(result.lat),
-        lon: parseFloat(result.lon),
+        lat: parseFloat(data.lat),
+        lon: parseFloat(data.lon),
       };
     }
-  }
 
-  return null;
+    return null;
+  } catch (error) {
+    console.error('좌표 변환 실패 (OSM):', error);
+    return null;
+  }
 };

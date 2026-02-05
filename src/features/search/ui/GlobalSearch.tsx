@@ -34,7 +34,7 @@ export default function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
         state: { lat: coords.lat, lon: coords.lon },
       });
     } else {
-      alert('위치 정보를 찾을 수 없습니다.');
+      alert('해당 장소의 정보가 제공되지 않습니다.');
     }
     setIsSearching(false);
   };

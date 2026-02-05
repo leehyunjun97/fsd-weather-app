@@ -29,6 +29,8 @@ export default function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
     if (isSearching) return;
     setIsSearching(true);
 
+    setSearchTerm(districtName);
+
     const coords = await queryClient.fetchQuery({
       queryKey: ['coords', districtName],
       queryFn: () => fetchCoordinates(districtName),

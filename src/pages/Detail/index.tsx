@@ -7,6 +7,7 @@ import { CurrentWeatherCard } from '../../entities/weather/ui/CurrentWeatherCard
 import { HourlyWeatherRow } from '../../entities/weather/ui/HourlyWeatherRow';
 import { Star } from 'lucide-react';
 import WeatherSkeleton from '../../entities/weather/ui/WeatherSkeleton';
+import { useFavoriteAction } from '../../features/favorites/model/useFavoriteAction';
 
 export default function DetailPage() {
   const { locationName } = useParams<{ locationName: string }>();
@@ -15,7 +16,10 @@ export default function DetailPage() {
   const [coords, setCoords] = useState<GeoLocation | null>(locationState);
   const [isLoadingCoords, setIsLoadingCoords] = useState(false);
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavoriteAction(
+    formattedLocationName,
+    coords
+  );
 
   useEffect(() => {
     const resolveCoords = async () => {
@@ -54,18 +58,10 @@ export default function DetailPage() {
     return <ErrorState message={formattedLocationName} onRetry={refetch} />;
   }
 
-  const handleToggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
-    console.log(
-      isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가',
-      formattedLocationName
-    );
-  };
-
   return (
     <div className='relative flex flex-col gap-6 pb-10 animate-in fade-in duration-700'>
       <button
-        onClick={handleToggleFavorite}
+        onClick={toggleFavorite}
         className='absolute top-0 right-4 z-20 p-2 outline-none cursor-pointer'
         aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
       >

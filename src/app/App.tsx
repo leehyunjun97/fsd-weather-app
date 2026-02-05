@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import QueryProvider from './providers/QueryProvider';
-import Main from '../pages/Main';
+import MainPage from '../pages/Main';
 import RootLayout from './ui/RootLayout';
 import DetailPage from '../pages/Detail';
+import FavoritesPage from '../pages/Favorites';
 
 const router = createBrowserRouter([
   {
@@ -11,9 +12,10 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Main />,
+        element: <MainPage />,
       },
       { path: 'detail/:locationName', element: <DetailPage /> },
+      { path: 'favorites', element: <FavoritesPage /> },
     ],
   },
 ]);

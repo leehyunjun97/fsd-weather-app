@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { fetchCoordinates } from '../../shared/api/weatherApi';
 import { ErrorState } from '../Main/ui/ErrorState';
 import { useWeather } from '../../shared/hooks/useWeather';
 import { CurrentWeatherCard } from '../../entities/weather/ui/CurrentWeatherCard';
@@ -8,42 +6,23 @@ import { HourlyWeatherRow } from '../../entities/weather/ui/HourlyWeatherRow';
 import { Star } from 'lucide-react';
 import WeatherSkeleton from '../../entities/weather/ui/WeatherSkeleton';
 import { useFavoriteAction } from '../../features/favorites/model/useFavoriteAction';
+import { useResolvedCoords } from './model/useResolvedCoords';
 
 export default function DetailPage() {
   const { locationName } = useParams<{ locationName: string }>();
-  const formattedLocationName = locationName?.replace(/-/g, ' ');
   const locationState = useLocation().state as GeoLocation | null;
-  const [coords, setCoords] = useState<GeoLocation | null>(locationState);
-  const [isLoadingCoords, setIsLoadingCoords] = useState(false);
+
+  const {
+    coords,
+    isLoading: isLoadingCoords,
+    errorMessage,
+    formattedLocationName,
+  } = useResolvedCoords(locationName, locationState);
 
   const { isFavorite, toggleFavorite } = useFavoriteAction(
     formattedLocationName,
     coords
   );
-
-  useEffect(() => {
-    const resolveCoords = async () => {
-      if (locationState) {
-        setCoords(locationState);
-        return;
-      }
-
-      if (formattedLocationName) {
-        setIsLoadingCoords(true);
-
-        const fetchedCoords = await fetchCoordinates(formattedLocationName);
-
-        if (fetchedCoords) {
-          setCoords(fetchedCoords);
-        } else {
-          setCoords(null);
-        }
-        setIsLoadingCoords(false);
-      }
-    };
-
-    resolveCoords();
-  }, [formattedLocationName, locationState]);
 
   const {
     data: weatherData,
@@ -54,7 +33,8 @@ export default function DetailPage() {
 
   if (isLoadingCoords || isWeatherLoading)
     return <WeatherSkeleton showFavorite={true} />;
-  if (error || !weatherData || (!coords && !isLoadingCoords)) {
+
+  if (errorMessage || error || !weatherData || (!coords && !isLoadingCoords)) {
     return <ErrorState message={formattedLocationName} onRetry={refetch} />;
   }
 

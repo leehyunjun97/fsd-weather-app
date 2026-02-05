@@ -1,5 +1,7 @@
 import { useFavoritesStore } from './useFavoritesStore';
 
+const MAX_FAVORITES = 6;
+
 export const useFavoriteAction = (
   locationName: string | undefined,
   coords: GeoLocation | null
@@ -22,6 +24,11 @@ export const useFavoriteAction = (
         removeFavorite(currentId);
       }
     } else {
+      if (favorites.length >= MAX_FAVORITES) {
+        alert(`즐겨찾기는 최대 ${MAX_FAVORITES}개까지만 저장할 수 있습니다!`);
+        return;
+      }
+
       const aliasInput = window.prompt(
         '즐겨찾기 별칭을 입력해주세요.',
         locationName

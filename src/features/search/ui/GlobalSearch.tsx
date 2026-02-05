@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import districts from '../../../shared/data/korea_districts.json';
 import { MapPin, Search } from 'lucide-react';
 import { fetchCoordinates } from '../../../shared/api/weatherApi';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface GlobalSearchProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface GlobalSearchProps {
 
 export default function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
@@ -24,8 +26,14 @@ export default function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
   }, [searchTerm]);
 
   const handleSelectLocation = async (districtName: string) => {
+    if (isSearching) return;
     setIsSearching(true);
-    const coords = await fetchCoordinates(districtName);
+
+    const coords = await queryClient.fetchQuery({
+      queryKey: ['coords', districtName],
+      queryFn: () => fetchCoordinates(districtName),
+      staleTime: Infinity,
+    });
 
     if (coords) {
       onClose();

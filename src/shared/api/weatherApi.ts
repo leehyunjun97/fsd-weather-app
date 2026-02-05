@@ -51,8 +51,6 @@ export const fetchCoordinates = async (
   query: string
 ): Promise<GeoLocation | null> => {
   try {
-    console.log(query);
-
     const response = await axios.get(COORDS_URL, {
       params: {
         q: query,

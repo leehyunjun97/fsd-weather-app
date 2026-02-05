@@ -46,13 +46,14 @@ export default function DetailPage() {
         aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
       >
         <Star
-          size={30}
-          className={'transition-colors text-yellow-400'}
+          className={
+            'transition-colors text-yellow-400 w-6 h-6 md:w-7.5 md:h-7.5'
+          }
           fill={isFavorite ? 'currentColor' : 'none'}
         />
       </button>
 
-      <section className='mt-4'>
+      <section className='mt-10 md:mt-4'>
         <CurrentWeatherCard
           current={weatherData.current}
           today={weatherData.daily[0]}

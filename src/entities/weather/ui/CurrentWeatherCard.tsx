@@ -14,7 +14,7 @@ export const CurrentWeatherCard = ({
   const iconUrl = `https://openweathermap.org/img/wn/${current.weather[0].icon}@4x.png`;
 
   return (
-    <div className='flex flex-col items-center justify-center py-6 md:py-8 text-gray-800'>
+    <div className='flex flex-col items-center justify-center py-4 md:py-8 text-gray-800'>
       <h2 className='text-xl md:text-2xl font-semibold tracking-tight mb-1'>
         {locationName}
       </h2>

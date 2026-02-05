@@ -3,8 +3,7 @@ import axios from 'axios';
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 const BASE_URL = import.meta.env.VITE_WEATHER_API_URL;
 const GEO_URL = import.meta.env.VITE_GEO_API_URL;
-const KAKAO_KEY = import.meta.env.VITE_KAKAO_API_KEY;
-const KAKAO_SEARCH_URL = import.meta.env.VITE_KAKAO_SEARCH_API_URL;
+const COORDS_URL = import.meta.env.VITE_COORDS_SEARCH_API_URL;
 
 export const fetchWeather = async ({
   lat,
@@ -48,32 +47,44 @@ export const fetchLocationName = async ({
   }
 };
 
+const searchOSM = async (query: string) => {
+  try {
+    const response = await axios.get(COORDS_URL, {
+      params: {
+        q: query,
+        format: 'json',
+        addressdetails: 1,
+        limit: 1,
+        countrycodes: 'kr',
+        email: 'dlguswns41@naver.com',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 export const fetchCoordinates = async (
   query: string
 ): Promise<GeoLocation | null> => {
-  try {
-    const response = await axios.get(KAKAO_SEARCH_URL, {
-      headers: {
-        Authorization: `KakaoAK ${KAKAO_KEY}`,
-      },
-      params: {
-        query,
-        size: 1,
-      },
-    });
+  const parts = query.trim().split(/\s+/);
+  for (let i = parts.length; i > 0; i--) {
+    const currentQuery = parts.slice(0, i).join(' ');
 
-    if (response.data.documents && response.data.documents.length > 0) {
-      const { x, y } = response.data.documents[0];
+    if (currentQuery.length < 2) break;
 
+    const data = await searchOSM(currentQuery);
+
+    if (data && data.length > 0) {
+      const result = data[0];
       return {
-        lat: parseFloat(y),
-        lon: parseFloat(x),
+        lat: parseFloat(result.lat),
+        lon: parseFloat(result.lon),
       };
     }
-
-    return null;
-  } catch (error) {
-    console.error('좌표 변환 실패 (카카오):', error);
-    return null;
   }
+
+  return null;
 };

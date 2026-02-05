@@ -47,7 +47,7 @@ export const FavoriteCard = ({ location }: FavoriteCardProps) => {
   return (
     <div
       onClick={handleCardClick}
-      className={`relative w-full p-4 md:p-6 h-28 md:h-36 rounded-3xl md:rounded-4xl text-white cursor-pointer transition-all hover:scale-[1.02] active:scale-95 shadow-lg overflow-hidden flex flex-col justify-between ${bgClass}`}
+      className={`relative w-full p-4 md:p-6 h-28 md:h-36 rounded-3xl md:rounded-4xl text-white cursor-pointer transition-all hover:scale-[1.02] active:scale-98 shadow-lg overflow-hidden flex flex-col justify-between ${bgClass}`}
     >
       <div className='absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 bg-white/10 rounded-full blur-2xl -mr-6 -mt-6 pointer-events-none' />
 

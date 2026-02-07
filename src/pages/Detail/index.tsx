@@ -3,10 +3,9 @@ import { ErrorState } from '../Main/ui/ErrorState';
 import { useWeather } from '../../shared/hooks/useWeather';
 import { CurrentWeatherCard } from '../../entities/weather/ui/CurrentWeatherCard';
 import { HourlyWeatherRow } from '../../entities/weather/ui/HourlyWeatherRow';
-import { Star } from 'lucide-react';
 import WeatherSkeleton from '../../entities/weather/ui/WeatherSkeleton';
-import { useFavoriteAction } from '../../features/favorites/model/useFavoriteAction';
 import { useResolvedCoords } from './model/useResolvedCoords';
+import { AddToFavoriteButton } from '../../features/favorites/ui/AddToFavoriteButton';
 
 export default function DetailPage() {
   const { locationName } = useParams<{ locationName: string }>();
@@ -18,11 +17,6 @@ export default function DetailPage() {
     errorMessage,
     formattedLocationName,
   } = useResolvedCoords(locationName, locationState);
-
-  const { isFavorite, toggleFavorite } = useFavoriteAction(
-    formattedLocationName,
-    coords
-  );
 
   const {
     data: weatherData,
@@ -40,18 +34,10 @@ export default function DetailPage() {
 
   return (
     <div className='relative flex flex-col gap-6 pb-10 animate-in fade-in duration-700'>
-      <button
-        onClick={toggleFavorite}
-        className='absolute top-0 right-4 z-20 p-2 outline-none cursor-pointer'
-        aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
-      >
-        <Star
-          className={
-            'transition-colors text-yellow-400 w-6 h-6 md:w-7.5 md:h-7.5'
-          }
-          fill={isFavorite ? 'currentColor' : 'none'}
-        />
-      </button>
+      <AddToFavoriteButton
+        locationName={formattedLocationName}
+        coords={coords}
+      />
 
       <section className='mt-10 md:mt-4'>
         <CurrentWeatherCard

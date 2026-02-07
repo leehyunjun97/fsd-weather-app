@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useFavoritesStore } from './useFavoritesStore';
 
 const MAX_FAVORITES = 6;
@@ -8,44 +9,54 @@ export const useFavoriteAction = (
 ) => {
   const { favorites, addFavorite, removeFavorite } = useFavoritesStore();
 
+  const [modalState, setModalState] = useState<'none' | 'add' | 'remove'>(
+    'none'
+  );
+
   const currentId = coords
     ? `${coords.lat.toFixed(4)}-${coords.lon.toFixed(4)}`
     : null;
-
   const isFavorite = currentId
     ? favorites.some((fav) => fav.id === currentId)
     : false;
 
-  const toggleFavorite = () => {
+  const handleToggle = () => {
     if (!coords || !currentId || !locationName) return;
 
     if (isFavorite) {
-      if (window.confirm('즐겨찾기에서 삭제하시겠습니까?')) {
-        removeFavorite(currentId);
-      }
+      setModalState('remove');
     } else {
       if (favorites.length >= MAX_FAVORITES) {
-        alert(`즐겨찾기는 최대 ${MAX_FAVORITES}개까지만 저장할 수 있습니다!`);
+        alert(`최대 ${MAX_FAVORITES}개까지만 저장 가능합니다.`);
         return;
       }
-
-      const aliasInput = window.prompt(
-        '즐겨찾기 별칭을 입력해주세요.',
-        locationName
-      );
-      if (aliasInput === null) return;
-
-      const finalAlias = aliasInput.trim() || locationName;
-
-      addFavorite({
-        id: currentId,
-        name: locationName,
-        alias: finalAlias,
-        lat: coords.lat,
-        lon: coords.lon,
-      });
+      setModalState('add');
     }
   };
 
-  return { isFavorite, toggleFavorite };
+  const confirmAdd = (alias: string) => {
+    if (!coords || !currentId || !locationName) return;
+    addFavorite({
+      id: currentId,
+      name: locationName,
+      alias: alias || locationName,
+      lat: coords.lat,
+      lon: coords.lon,
+    });
+    setModalState('none');
+  };
+
+  const confirmRemove = () => {
+    if (currentId) removeFavorite(currentId);
+    setModalState('none');
+  };
+
+  return {
+    isFavorite,
+    handleToggle,
+    modalState,
+    closeModal: () => setModalState('none'),
+    confirmAdd,
+    confirmRemove,
+  };
 };

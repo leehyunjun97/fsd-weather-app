@@ -13,7 +13,7 @@ export default function Header() {
         <div className='flex h-14 items-center justify-between'>
           <button
             onClick={() => navigate('/')}
-            className='flex items-center gap-2 transition-opacity hover:opacity-70'
+            className='flex items-center gap-2 transition-opacity hover:opacity-70 cursor-pointer'
           >
             <h1 className='text-xl font-extrabold tracking-tighter text-gray-900'>
               REAL<span className='text-gray-400'>TEETH</span>

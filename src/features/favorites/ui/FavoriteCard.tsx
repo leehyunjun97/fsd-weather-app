@@ -62,7 +62,7 @@ export const FavoriteCard = ({ location }: FavoriteCardProps) => {
 
             <button
               onClick={handleEditClick}
-              className='p-1.5 rounded-full hover:bg-white/20 transition-colors text-white/80 hover:text-white'
+              className='p-1.5 rounded-full hover:bg-white/20 transition-colors text-white/80 hover:text-white cursor-pointer'
               title='별칭 수정'
             >
               <Edit2 size={16} />
@@ -71,7 +71,7 @@ export const FavoriteCard = ({ location }: FavoriteCardProps) => {
 
           <button
             onClick={handleDeleteClick}
-            className='p-1.5 md:p-2 -mr-1 -mt-1 rounded-full hover:bg-black/10 text-white/70 hover:text-white transition-colors'
+            className='p-1.5 md:p-2 -mr-1 -mt-1 rounded-full hover:bg-black/10 text-white/70 hover:text-white transition-colors cursor-pointer'
           >
             <Trash2 size={18} />
           </button>

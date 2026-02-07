@@ -4,7 +4,7 @@ import { useWeather } from '../../shared/hooks/useWeather';
 import { CurrentWeatherCard } from '../../entities/weather/ui/CurrentWeatherCard';
 import { HourlyWeatherRow } from '../../entities/weather/ui/HourlyWeatherRow';
 import WeatherSkeleton from '../../entities/weather/ui/WeatherSkeleton';
-import { useResolvedCoords } from './model/useResolvedCoords';
+import { useResolvedCoords } from '../../features/location/useResolvedCoords';
 import { AddToFavoriteButton } from '../../features/favorites/ui/AddToFavoriteButton';
 
 export default function DetailPage() {

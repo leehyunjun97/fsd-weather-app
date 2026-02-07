@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchCoordinates } from '../../../shared/api/weatherApi';
+import { fetchCoordinates } from '../../shared/api/weatherApi';
 
 export const useResolvedCoords = (
   locationName: string | undefined,

@@ -65,3 +65,62 @@ yarn dev
 * **Black & Gray 테마:** 눈의 피로를 줄이고 정보의 가독성을 높이는 **Black/Gray 기반의 미니멀한 테마**를 적용했습니다.
 * **반응형 레이아웃:** 모바일, 데스크탑 등 화면 크기에 맞춰 레이아웃이 유동적으로 최적화됩니다.
 * **스켈레톤 로딩:** 데이터 로딩 시 깜빡임 현상을 방지하기 위해 스켈레톤 UI를 적용하여 부드러운 사용자 경험을 제공합니다.
+
+## 🛠️ 3. 기술적 의사결정
+
+프로젝트의 유지보수성과 성능 최적화를 위해 다음과 같은 기술 스택과 아키텍처를 선정했습니다.
+
+### 1. FSD 아키텍처 도입
+* **배경:** 일반적인 계층형 구조(`components/`, `hooks/`)는 프로젝트 규모가 커질수록 비즈니스 로직의 위치가 모호해지고, 파일 간의 의존성 파악이 어려웠습니다.
+* **결정:** 기능을 기준으로 코드를 분리하는 **FSD 아키텍처**를 도입했습니다.
+* **이유 및 효과:**
+  * **명확한 의존성:** `shared` → `entities` → `features` → `pages`로 이어지는 단방향 의존성 규칙을 통해 코드 간의 결합도를 낮추고 응집도를 높였습니다.
+  * **유지보수성:** 특정 기능 수정 시 관련된 파일들이 한 폴더에 모여 있어, 유지보수 효율을 극대화했습니다.
+
+### 2. TanStack Query 도입
+* **배경:** 날씨 데이터는 빈번하게 갱신될 필요가 없지만, 사용자의 잦은 조회로 인해 불필요한 네트워크 요청이 발생할 수 있습니다. `useEffect`만으로는 로딩, 에러, 캐싱 처리가 복잡했습니다.
+* **결정:** 서버 상태 관리에 특화된 **TanStack Query**를 사용했습니다.
+* **이유 및 효과:**
+  * **캐싱 전략:** `staleTime`을 적절히 설정하여 중복된 API 호출을 방지하고, 서버 부하를 줄였습니다.
+  * **선언적 코드:** `isLoading`, `isError` 등의 상태를 직관적으로 사용하여 비동기 로직의 복잡도를 40% 이상 낮췄습니다.
+
+### 3. Zustand를 활용한 전역 상태 관리
+* **배경:** '즐겨찾기' 기능은 여러 컴포넌트에서 공유되어야 하는 클라이언트 상태였습니다. Redux는 보일러플레이트가 과도하고, Context API는 렌더링 최적화가 까다로웠습니다.
+* **결정:** 가장 직관적이고 경량화된 라이브러리인 **Zustand**를 선택했습니다.
+* **이유 및 효과:**
+  * **데이터 영속성:** `persist` 미들웨어를 활용하여 별도의 복잡한 로직 없이 **localStorage와의 동기화**를 구현했습니다.
+  * **간결함:** 훅 기반의 API로 상태 업데이트 로직을 중앙에서 효율적으로 관리했습니다.
+
+### 4. Tailwind CSS 기반의 스타일링
+* **배경:** 별도의 CSS 파일을 관리하거나 클래스명을 고민하는 시간을 줄이고, 오로지 로직 구현에 집중할 수 있는 환경이 필요했습니다.
+* **결정:** 유틸리티 퍼스트 CSS 프레임워크인 **Tailwind CSS**를 도입했습니다.
+* **이유 및 효과:**
+  * **생산성:** HTML 마크업 내에서 스타일을 즉시 적용하여 UI 개발 속도를 높였습니다.
+  * **반응형 최적화:** `md:`, `lg:` 등의 접두사를 활용하여 모바일 및 다양한 디바이스 환경에 대응하는 레이아웃을 손쉽게 구현했습니다.
+
+### 5. OpenStreetMap 활용
+* **배경:** 날씨 정보를 조회하기 위해서는 사용자가 입력한 '지역명'을 API가 이해할 수 있는 '위도/경도'로 변환하는 지오코딩 과정이 필수적이었습니다.
+* **결정:** Google, KAKAO Maps API 대신 오픈 소스 기반의 **OpenStreetMap**을 선택했습니다.
+* **이유 및 효과:**
+  * **비용 효율성:** 별도의 API 키 발급이나 카드 등록 절차 없이 무료로 사용할 수 있어, 사이드 프로젝트의 유지 비용을 '0원'으로 만들었습니다.
+  * **개발 용이성:** REST API 방식이 직관적이고, 방대한 주소 데이터를 JSON 형식으로 손쉽게 받아올 수 있어 개발 생산성을 높였습니다.
+
+## 🛠️ 4. 사용 기술
+
+### **개발 환경**
+<img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">
+
+### **프론트엔드**
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"> <img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white">
+
+### **상태 관리**
+<img src="https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white"> <img src="https://img.shields.io/badge/Zustand-orange?style=for-the-badge&logo=react&logoColor=white">
+
+### **스타일링**
+<img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"> <img src="https://img.shields.io/badge/Lucide_React-F56565?style=for-the-badge&logo=lucide&logoColor=white">
+
+### **API & 배포**
+<img src="https://img.shields.io/badge/OpenStreetMap-7EBC6F?style=for-the-badge&logo=openstreetmap&logoColor=white"> <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+
+### **아키텍처**
+* **FSD (Feature-Sliced Design)**

@@ -14,7 +14,7 @@ export const HourlyWeatherRow = ({ data }: HourlyWeatherRowProps) => {
         ref={scrollRef}
         {...events}
       >
-        {data.map((item, index) => (
+        {data.slice(0, 24).map((item, index) => (
           <div
             key={item.dt}
             className={`

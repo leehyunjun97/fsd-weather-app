@@ -30,6 +30,7 @@ export default function Header() {
             </button>
 
             <button
+              data-search-trigger='true'
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className={`btn-icon transition-colors ${isSearchOpen && 'bg-gray-100'}`}
               aria-label='검색'

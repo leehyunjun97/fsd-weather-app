@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import districts from '../../../shared/data/korea_districts.json';
 import { MapPin, Search } from 'lucide-react';
@@ -15,6 +15,39 @@ export default function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        containerRef.current.contains(event.target as Node)
+      ) {
+        return;
+      }
+      const target = event.target as Element;
+      if (target.closest('[data-search-trigger="true"]')) {
+        return;
+      }
+      onClose();
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
+    }
+  }, [isOpen]);
 
   const filteredDistricts = useMemo(() => {
     if (!searchTerm) return [];
@@ -52,7 +85,7 @@ export default function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
   if (!isOpen) return null;
 
   return (
-    <div className='w-full'>
+    <div ref={containerRef} className='w-full'>
       <div className='pb-4 animate-in fade-in slide-in-from-top-2 duration-200'>
         <div className='relative'>
           <input

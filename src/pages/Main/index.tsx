@@ -2,7 +2,7 @@ import { CurrentWeatherCard } from '../../entities/weather/ui/CurrentWeatherCard
 import { HourlyWeatherRow } from '../../entities/weather/ui/HourlyWeatherRow';
 import WeatherSkeleton from '../../entities/weather/ui/WeatherSkeleton';
 import { useAddress } from '../../shared/hooks/useAddress';
-import { useCurrentLocation } from '../../shared/hooks/useCurrentLocation';
+import { useCurrentLocation } from '../../features/location/useCurrentLocation';
 import { useWeather } from '../../shared/hooks/useWeather';
 import { ErrorState } from './ui/ErrorState';
 

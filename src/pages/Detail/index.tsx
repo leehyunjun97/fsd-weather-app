@@ -33,7 +33,10 @@ export default function DetailPage() {
   }
 
   return (
-    <div className='relative flex flex-col gap-6 pb-10 animate-in fade-in duration-700'>
+    <div
+      key={locationName}
+      className='relative flex flex-col gap-6 pb-10 animate-in fade-in duration-700'
+    >
       <AddToFavoriteButton
         locationName={formattedLocationName}
         coords={coords}

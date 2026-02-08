@@ -1,10 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Search, Star } from 'lucide-react';
 import { useState } from 'react';
 import GlobalSearch from '../features/search/ui/GlobalSearch';
 
 export default function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
@@ -22,7 +23,11 @@ export default function Header() {
 
           <div className='flex items-center gap-1'>
             <button
-              onClick={() => navigate('/favorites')}
+              onClick={() => {
+                if (location.pathname !== '/favorites') {
+                  navigate('/favorites');
+                }
+              }}
               className='btn-icon'
               aria-label='즐겨찾기'
             >
